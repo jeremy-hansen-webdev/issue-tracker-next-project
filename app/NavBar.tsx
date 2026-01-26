@@ -1,5 +1,6 @@
 "use client";
 
+import classNames from "classnames";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaBug } from "react-icons/fa";
@@ -19,7 +20,10 @@ const NavBar = () => {
         {issues.map((issue) => (
           <li key={issue.href}>
             <Link
-              className="text-zinc-600 hover:text-zinc-800"
+              className={classNames({
+                "text-zinc-600 transition-colors duration-200": true,
+                "text-zinc-900": pathname === issue.href,
+              })}
               href={issue.href}
             >
               {issue.name}
