@@ -13,7 +13,7 @@ const NavBar = () => {
   ];
   return (
     <nav className="flex gap-5 p-5 border border-zinc-900 items-center">
-      <Link href={"/"}>
+      <Link aria-label="Home" href={"/"}>
         <FaBug size={30} />
       </Link>
       <ul className="flex gap-5">
