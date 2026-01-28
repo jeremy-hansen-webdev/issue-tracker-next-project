@@ -23,7 +23,7 @@ const IssueForm = () => {
       body: JSON.stringify(data),
     });
 
-    if (!res) {
+    if (!res.ok) {
       return;
     }
 
@@ -37,10 +37,14 @@ const IssueForm = () => {
       <label className="text-label" htmlFor="title">
         Title
       </label>
-      <input {...register("title")} className="input" />
-      {errors.title && <p>{errors.title.message}</p>}
+      <input autoFocus id="title" {...register("title")} className="input" />
+      {errors.title && (
+        <p role="alert" className="text-red-700">
+          {errors.title.message}
+        </p>
+      )}
 
-      <label className="text-label" htmlFor="Description">
+      <label className="text-label" htmlFor="description">
         Description
       </label>
 
@@ -51,13 +55,21 @@ const IssueForm = () => {
           <MarkdownEditor value={field.value ?? ""} onChange={field.onChange} />
         )}
       />
-      {errors.description && <p>{errors.description.message}</p>}
+      {errors.description && (
+        <p role="alert" className="text-red-700">
+          {errors.description.message}
+        </p>
+      )}
       <div className="flex items-center space-x-2">
-        <button type="button" disabled={isSubmitting} className="btn-pr-1">
+        <button type="submit" disabled={isSubmitting} className="btn-pr-1">
           Create Issue
         </button>
         {isSubmitting && (
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"></div>
+          <div
+            role="status"
+            aria-label="Loading"
+            className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"
+          ></div>
         )}
       </div>
     </form>
