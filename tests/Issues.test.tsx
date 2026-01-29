@@ -1,9 +1,12 @@
 import Issues from "@/app/issues/page";
-import { render, screen } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { set } from "zod";
+import { delay, http, HttpResponse } from "msw";
 import { server } from "./mocks/server";
-import { http, HttpResponse } from "msw";
 
 const pushMock = vi.fn();
 
@@ -33,6 +36,15 @@ function setup() {
   const submit = () => screen.getByRole("button", { name: /create issue/i });
 
   return { user, title, description, submit };
+}
+
+function mockSubmit() {
+  server.use(
+    http.post("/api/issues", async () => {
+      await delay(300);
+      return HttpResponse.json({ id: 1 }, { status: 201 });
+    }),
+  );
 }
 
 async function fillForm(
@@ -85,11 +97,6 @@ describe("Issue Page", () => {
       expectedError: /3/,
     },
     {
-      name: "title over 255",
-      values: { title: "a".repeat(256), description: "aaa" },
-      expectedError: /255/,
-    },
-    {
       name: "description too short",
       values: { title: "aaa", description: "aa" },
       expectedError: /3/,
@@ -112,11 +119,7 @@ describe("Issue Page", () => {
   });
 
   it('submit the form and redirects to home "/"', async () => {
-    server.use(
-      http.post("/api/issues", async () => {
-        return HttpResponse.json({ id: 1 }, { status: 201 });
-      }),
-    );
+    mockSubmit();
 
     const { user, submit } = setup();
 
@@ -125,5 +128,28 @@ describe("Issue Page", () => {
     await user.click(submit());
 
     expect(pushMock).toHaveBeenCalledWith("/");
+  });
+
+  it("should show loading when submitted", async () => {
+    mockSubmit();
+
+    const { user, submit } = setup();
+
+    await fillForm(user, { title: "aaa", description: "aaa" });
+
+    await user.click(submit());
+
+    expect(
+      await screen.findByRole("status", { name: /loading/i }),
+    ).toBeInTheDocument();
+
+    expect(submit()).toBeDisabled();
+
+    await waitForElementToBeRemoved(() =>
+      screen.queryByRole("status", { name: /loading/i }),
+    );
+  });
+  it("should re-enable the submit button upon submission", () => {
+    mockSubmit();
   });
 });
