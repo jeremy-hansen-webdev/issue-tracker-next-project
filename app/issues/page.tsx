@@ -1,12 +1,13 @@
-"use client";
-
-import IssueForm from "@/components/forms/IssueForm";
+import IssuesTable from "@/components/tables/IssuesTable";
+import Link from "next/link";
 
 const Issues = () => {
   return (
-    <div className="p-5">
-      <h1 className="text-pr-2 mb-4">Issues Page</h1>
-      <IssueForm />
+    <div className="pt-4">
+      <Link className="btn-pr-1" href={"/issues/new"}>
+        New Issue
+      </Link>
+      <IssuesTable />
     </div>
   );
 };

@@ -27,7 +27,7 @@ const IssueForm = () => {
       return;
     }
 
-    router.push("/");
+    router.push("/issues");
   };
   return (
     <form

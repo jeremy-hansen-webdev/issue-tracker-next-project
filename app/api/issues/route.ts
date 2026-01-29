@@ -32,3 +32,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
+
+export async function GET() {
+  try {
+    console.log("GET /api/issues called");
+    const issues = await prisma.issue.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+    console.log("Fetched issues:", issues);
+    return NextResponse.json(issues, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { error: "Failed to fecth issues" },
+      { status: 500 },
+    );
+  }
+}

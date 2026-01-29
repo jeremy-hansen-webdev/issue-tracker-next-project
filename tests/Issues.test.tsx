@@ -1,4 +1,4 @@
-import Issues from "@/app/issues/page";
+import Issues from "@/app/issues/new/page";
 import {
   render,
   screen,
@@ -118,7 +118,7 @@ describe("Issue Page", () => {
     expect(await screen.queryByText(/least 3/i)).not.toBeInTheDocument();
   });
 
-  it('submit the form and redirects to home "/"', async () => {
+  it('submit the form and redirects to home "/issues"', async () => {
     mockSubmit();
 
     const { user, submit } = setup();
@@ -127,7 +127,7 @@ describe("Issue Page", () => {
 
     await user.click(submit());
 
-    expect(pushMock).toHaveBeenCalledWith("/");
+    expect(pushMock).toHaveBeenCalledWith("/issues");
   });
 
   it("should show loading when submitted", async () => {

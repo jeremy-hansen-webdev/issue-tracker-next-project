@@ -42,6 +42,10 @@
   .text-label {
     @apply font-normal text-2xl;
   }
+
+  .link {
+    @apply relative py-4 pr-3 text-sm font-medium text-purple-700 hover:text-purple-900 hover:underline cursor-pointer
+  }
 }
 
 @import "easymde/dist/easymde.min.css";
