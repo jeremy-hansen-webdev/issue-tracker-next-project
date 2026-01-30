@@ -1,12 +1,10 @@
 import IssuesTable from "@/components/tables/IssuesTable";
-import Link from "next/link";
+import IssueActions from "./IssueActions";
 
 const Issues = () => {
   return (
     <div className="pt-4">
-      <Link className="btn-pr-1" href={"/issues/new"}>
-        New Issue
-      </Link>
+      <IssueActions />
       <IssuesTable />
     </div>
   );

@@ -1,13 +1,13 @@
-import { issueBadge } from "@/app/issues/issuesBadgeType";
-import { prisma } from "@/lib/prisma/prisma";
-import Link from "next/link";
 
-const IssuesTable = async () => {
-  const issues = await prisma.issue.findMany();
-  const titles = ["Title", "Status", "Description", "Created"];
+import Skeleton from "@/lib";
+import IssueActions from "./IssueActions";
 
+const IssuesLoadingPage = () => {
+  const titles = [1, 2, 3, 4];
+  const issues = [1, 2, 3, 4, 5, 6];
   return (
-    <div>
+    <div className="pt-4">
+      <IssueActions />
       <div className="mt-8 flow-root overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <table className="w-full text-left">
@@ -19,7 +19,7 @@ const IssuesTable = async () => {
                     scope="col"
                     className="relative isolate py-3.5 pr-3 text-left text-sm font-semibold text-gray-900"
                   >
-                    {title}
+                    <Skeleton />
                     <div className="absolute inset-y-0 right-full -z-10 w-screen border-b border-b-gray-200" />
                     <div className="absolute inset-y-0 left-0 -z-10 w-screen border-b border-b-gray-200" />
                   </th>
@@ -28,28 +28,22 @@ const IssuesTable = async () => {
             </thead>
             <tbody>
               {issues.map((issue) => (
-                <tr key={issue.id}>
+                <tr key={issue}>
                   <td className="link">
                     <>
-                      <Link href={`/issues/${issue.id}`}>{issue.title}</Link>
-
+                      <Skeleton />
                       <div className="absolute right-full bottom-0 h-px w-screen bg-gray-100" />
                       <div className="absolute bottom-0 left-0 h-px w-screen bg-gray-100" />
                     </>
                   </td>
-                  <td
-                    style={{ color: issueBadge[issue.status] }}
-                    className="hidden px-3 py-4 text-sm sm:table-cell"
-                  >
-                    {issue.status}
+                  <td className="hidden px-3 py-4 text-sm sm:table-cell">
+                    <Skeleton />
                   </td>
                   <td className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
-                    {issue.description}
+                    <Skeleton />
                   </td>
                   <td className="px-3 py-4 text-sm text-gray-500">
-                    {new Intl.DateTimeFormat("en-US", {
-                      dateStyle: "medium",
-                    }).format(new Date(issue.createdAt.toLocaleString()))}
+                    <Skeleton />
                   </td>
                 </tr>
               ))}
@@ -61,4 +55,4 @@ const IssuesTable = async () => {
   );
 };
 
-export default IssuesTable;
+export default IssuesLoadingPage;
