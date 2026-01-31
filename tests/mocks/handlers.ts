@@ -1,18 +1,15 @@
 import { faker } from "@faker-js/faker";
 import { http, HttpResponse } from "msw";
+import { makeIssues } from "../factories/issueFactory";
 
 faker.seed(123);
 
 export const handlers = [
-  http.get("/api/issues", () => {
-    const issues = Array.from({ length: 5 }).map(() => ({
-      id: faker.number.int({ min: 1, max: 10_000 }),
-      title: faker.lorem.sentence(),
-      description: faker.lorem.paragraph(),
-      createAt: faker.date.recent().toISOString(),
-    }));
-    return HttpResponse.json(issues, { status: 200 });
-  }),
+  http.get("api/issues", () => {
+    console.log(makeIssues)
+    return HttpResponse.json(makeIssues())
+  })
+  ,
 
   http.post("/api/issues", async ({ request }) => {
     const body = (await request.json()) as {
