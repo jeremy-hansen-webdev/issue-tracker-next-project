@@ -4,7 +4,14 @@ import Link from "next/link";
 
 const IssuesTable = async () => {
   const issues = await prisma.issue.findMany();
-  const titles = ["Title", "Status", "Description", "Created"];
+  const titles = [
+    { name: "Title", display: "" },
+    { name: "Status", display: "" },
+    { name: "Description", display: "hidden" },
+    { name: "Created", display: "hidden" },
+  ];
+  const mainTitleDisplay =
+    "relative isolate py-3.5 pr-3 text-left text-sm font-semibold text-gray-900 md:table-cell";
 
   return (
     <div>
@@ -15,11 +22,11 @@ const IssuesTable = async () => {
               <tr>
                 {titles.map((title) => (
                   <th
-                    key={title}
+                    key={title.name}
                     scope="col"
-                    className="relative isolate py-3.5 pr-3 text-left text-sm font-semibold text-gray-900"
+                    className={title.display + " " + mainTitleDisplay}
                   >
-                    {title}
+                    {title.name}
                     <div className="absolute inset-y-0 right-full -z-10 w-screen border-b border-b-gray-200" />
                     <div className="absolute inset-y-0 left-0 -z-10 w-screen border-b border-b-gray-200" />
                   </th>
@@ -39,14 +46,14 @@ const IssuesTable = async () => {
                   </td>
                   <td
                     style={{ color: issueBadge[issue.status] }}
-                    className="hidden px-3 py-4 text-sm sm:table-cell"
+                    className="px-3 py-4 text-sm"
                   >
                     {issue.status}
                   </td>
                   <td className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
                     {issue.description}
                   </td>
-                  <td className="px-3 py-4 text-sm text-gray-500">
+                  <td className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
                     {new Intl.DateTimeFormat("en-US", {
                       dateStyle: "medium",
                     }).format(new Date(issue.createdAt.toLocaleString()))}
