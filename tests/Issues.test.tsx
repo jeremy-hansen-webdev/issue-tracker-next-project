@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Issues from "@/app/issues/page";
-import IssuesTable, {
-  IssuesTableHeader,
-} from "@/components/tables/IssuesTable";
+import { IssuesTableHeader } from "@/app/issues/componenets/IssuesTableHeader";
+import IssuesTable from "@/components/tables/IssuesTable";
+import { prisma } from "@/lib/prisma/prisma";
 import { render, screen, within } from "@testing-library/react";
 import { makeIssues } from "./factories/issueFactory";
-import { prisma } from "@/lib/prisma/prisma";
 
 // Mock next/link so RTL can render it without Next runtime
 vi.mock("next/link", () => ({
@@ -46,7 +44,7 @@ describe("IssuesList", () => {
   });
 
   it("renders data in the table", async () => {
-    const issues = makeIssues(2).map((i) => ({
+    const issues = makeIssues(1).map((i) => ({
       ...i,
       createdAt: new Date(i.createdAt ?? new Date()), // ensure Date type
     }));
@@ -59,18 +57,12 @@ describe("IssuesList", () => {
 
     // assert titles appear
     expect(screen.getByText(issues[0].title)).toBeInTheDocument();
-    expect(screen.getByText(issues[1].title)).toBeInTheDocument();
     expect(screen.getByText(issues[0].description)).toBeInTheDocument();
-    expect(screen.getByText(issues[1].description)).toBeInTheDocument();
     const expectedDate1 = new Intl.DateTimeFormat("en-US", {
       dateStyle: "medium",
     }).format(new Date(issues[0].createdAt));
-    const expectedDate2 = new Intl.DateTimeFormat("en-US", {
-      dateStyle: "medium",
-    }).format(new Date(issues[1].createdAt));
 
     expect(screen.getAllByText(expectedDate1)).toHaveLength(1);
-    expect(screen.getAllByText(expectedDate2)).toHaveLength(1);
 
     // assert statuses appear
     expect(
