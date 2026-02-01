@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { issueBadge } from "../issuesBadgeType";
+import { FiEdit2 } from "react-icons/fi";
+import Link from "next/link";
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -34,11 +36,20 @@ const IssuesDetailPage = async ({ params }: Params) => {
           {issue.description}
         </ReactMarkdown>
       </article>
-      <p className="self-end mr-5">
-        {new Intl.DateTimeFormat("en-US", { dateStyle: "long" }).format(
-          new Date(issue.createdAt.toLocaleString()),
-        )}
-      </p>
+      <div className="flex justify-between items-start">
+        <Link href={`${issue?.id}/edit`}>
+          <button className="btn-pr-1 space-x-2">
+            {" "}
+            <span>Edit</span>
+            <FiEdit2 />
+          </button>
+        </Link>
+        <p className="mr-5">
+          {new Intl.DateTimeFormat("en-US", { dateStyle: "long" }).format(
+            new Date(issue.createdAt.toLocaleString()),
+          )}
+        </p>
+      </div>
     </div>
   );
 };

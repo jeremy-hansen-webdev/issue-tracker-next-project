@@ -1,6 +1,8 @@
-import { IssuesTableHeader } from "@/app/issues/componenets/IssuesTableHeader";
+import { IssuesTableHeader } from "@/app/issues/components/IssuesTableHeader";
 import { issueBadge } from "@/app/issues/issuesBadgeType";
 import { prisma } from "@/lib/prisma/prisma";
+import { MdEdit } from "react-icons/md";
+
 import Link from "next/link";
 
 const IssuesTable = async () => {
@@ -28,13 +30,26 @@ const IssuesTable = async () => {
                   >
                     {issue.status}
                   </td>
-                  <td aria-label="hr-description" className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
+                  <td
+                    aria-label="hr-description"
+                    className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell"
+                  >
                     {issue.description}
                   </td>
-                  <td aria-label="hr-date-created" className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
+                  <td
+                    aria-label="hr-date-created"
+                    className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell"
+                  >
                     {new Intl.DateTimeFormat("en-US", {
                       dateStyle: "medium",
                     }).format(new Date(issue.createdAt.toLocaleString()))}
+                  </td>
+                  <td>
+                    <Link href={`issues/${issue.id}/edit`}>
+                      <button className="btn-pr-3">
+                        <MdEdit />
+                      </button>
+                    </Link>
                   </td>
                 </tr>
               ))}

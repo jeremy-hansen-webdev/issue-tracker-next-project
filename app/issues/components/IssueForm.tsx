@@ -1,11 +1,16 @@
 "use client";
-import { useRouter } from "next/navigation";
 import { createIssueInput, createIssueSchema } from "@/lib/validation/issues";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
-import MarkdownEditor from "../editors/MarkdownEditor";
+import MarkdownEditor from "./MarkdownEditor";
+import { Issue } from "@prisma/client";
 
-const IssueForm = () => {
+type IssueFromProps = {
+  issue?: Pick<Issue, "id" | "title" | "description">;
+};
+
+const IssueForm = ({ issue }: IssueFromProps) => {
   const router = useRouter();
   const {
     control,
@@ -14,6 +19,10 @@ const IssueForm = () => {
     formState: { errors, isSubmitting },
   } = useForm<createIssueInput>({
     resolver: zodResolver(createIssueSchema),
+    defaultValues: {
+      title: issue?.title ?? "",
+      description: issue?.description ?? "",
+    },
   });
 
   const onSubmit = async (data: createIssueInput) => {
@@ -62,7 +71,7 @@ const IssueForm = () => {
       )}
       <div className="flex items-center space-x-2">
         <button type="submit" disabled={isSubmitting} className="btn-pr-1">
-          Create Issue
+          {issue ? "Edit Issue" : "Create Issue"}
         </button>
         {isSubmitting && (
           <div

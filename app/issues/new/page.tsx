@@ -1,6 +1,6 @@
 "use client";
 
-import IssueForm from "@/components/forms/IssueForm";
+import IssueForm from "@/app/issues/components/IssueForm";
 
 const Issues = () => {
   return (

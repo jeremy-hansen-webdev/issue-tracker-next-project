@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IssuesTableHeader } from "@/app/issues/componenets/IssuesTableHeader";
-import IssuesTable from "@/components/tables/IssuesTable";
+import { IssuesTableHeader } from "@/app/issues/components/IssuesTableHeader";
+import IssuesTable from "@/app/issues/components/IssuesTable";
 import { prisma } from "@/lib/prisma/prisma";
 import { render, screen, within } from "@testing-library/react";
 import { makeIssues } from "./factories/issueFactory";

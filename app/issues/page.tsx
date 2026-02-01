@@ -1,4 +1,4 @@
-import IssuesTable from "@/components/tables/IssuesTable";
+import IssuesTable from "@/app/issues/components/IssuesTable";
 import IssueActions from "./IssueActions";
 
 const Issues = () => {
