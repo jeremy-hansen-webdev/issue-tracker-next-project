@@ -1,10 +1,10 @@
 "use client";
 import { createIssueInput, createIssueSchema } from "@/lib/validation/issues";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Issue } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import MarkdownEditor from "./MarkdownEditor";
-import { Issue } from "@prisma/client";
 
 type IssueFromProps = {
   issue?: Pick<Issue, "id" | "title" | "description">;
@@ -24,10 +24,12 @@ const IssueForm = ({ issue }: IssueFromProps) => {
       description: issue?.description ?? "",
     },
   });
+  const url = issue ? `/api/issues/${issue.id}` : "/api/issues";
+  const method = issue ? "PATCH" : "POST";
 
   const onSubmit = async (data: createIssueInput) => {
-    const res = await fetch("/api/issues", {
-      method: "POST",
+    const res = await fetch(url, {
+      method: method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
@@ -37,6 +39,8 @@ const IssueForm = ({ issue }: IssueFromProps) => {
     }
 
     router.push("/issues");
+    // router.refresh();
+    
   };
   return (
     <form
@@ -70,7 +74,10 @@ const IssueForm = ({ issue }: IssueFromProps) => {
         </p>
       )}
       <div className="flex items-center space-x-2">
-        <button type="submit" disabled={isSubmitting} className="btn-pr-1">
+        <button 
+          type="submit" 
+          aria-label="issue-submit"
+          disabled={isSubmitting} className="btn-pr-1">
           {issue ? "Edit Issue" : "Create Issue"}
         </button>
         {isSubmitting && (

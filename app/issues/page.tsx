@@ -1,6 +1,7 @@
 import IssuesTable from "@/app/issues/components/IssuesTable";
 import IssueActions from "./IssueActions";
 
+
 const Issues = () => {
   return (
     <div className="pt-4">
@@ -9,5 +10,5 @@ const Issues = () => {
     </div>
   );
 };
-
+export const dynamic = "force-dynamic";
 export default Issues;

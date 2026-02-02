@@ -4,11 +4,21 @@ import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 
-export async function POST(request: Request) {
+interface Params {
+  params: Promise<{ id: string }>;
+}
+
+export async function PATCH(request: Request, { params }: Params) {
   try {
+    const id = Number((await params).id);
+    if (!id || isNaN(id)) {
+      return NextResponse.json({ error: "Invalid Id" }, { status: 400 });
+    }
     const body = await request.json();
     const data = createIssueSchema.parse(body);
-    const post = await prisma.issue.create({
+
+    const patch = await prisma.issue.update({
+      where: { id },
       data: {
         title: data.title,
         description: data.description,
@@ -16,8 +26,9 @@ export async function POST(request: Request) {
     });
 
     revalidatePath("/issues");
+    revalidatePath(`/issues/${id}`);
 
-    return NextResponse.json({ ok: true, post }, { status: 201 });
+    return NextResponse.json({ ok: true, patch }, { status: 200 });
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(

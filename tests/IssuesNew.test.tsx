@@ -1,4 +1,3 @@
-import Issues from "@/app/issues/new/page";
 import {
   render,
   screen,
@@ -7,6 +6,8 @@ import {
 import userEvent from "@testing-library/user-event";
 import { delay, http, HttpResponse } from "msw";
 import { server } from "./mocks/server";
+import IssueForm from "@/app/issues/components/IssueForm";
+import Issues from "@/app/issues/page";
 
 const pushMock = vi.fn();
 
@@ -28,7 +29,7 @@ vi.mock("@/components/editors/MarkdownEditor", () => ({
 
 function setup() {
   const user = userEvent.setup();
-  render(<Issues />);
+  render(<IssueForm />);
 
   const title = () => screen.getByLabelText(/title/i);
   const description = () => screen.getByLabelText(/description/i);
@@ -56,38 +57,33 @@ async function fillForm(
     await user.type(screen.getByLabelText(/title/i), values.title);
   }
   if (values.description !== undefined) {
-    await user.clear(screen.getByLabelText(/description/i));
+    await user.clear(await screen.findByLabelText(/description/i));
     await user.type(screen.getByLabelText(/description/i), values.description);
   }
 }
 
 describe("Issue Page", () => {
-  it("should render form fields and button", () => {
-    const labels = [/title/i, /description/i];
-    render(<Issues />);
-    labels.forEach((label) => {
-      expect(screen.getByLabelText(label)).toBeInTheDocument();
-    });
-    expect(screen.getAllByRole("textbox")).toHaveLength(2);
-    expect(screen.getByRole("button")).toBeInTheDocument();
-  });
+  it("should render form fields and button", async () => {
+    render(<IssueForm />);
+    expect(await screen.findByText(/title/i)).toBeInTheDocument();
+    expect(await screen.findByText(/description/i)).toBeInTheDocument();
 
-  it("should show heading and labels", () => {
-    render(<Issues />);
-    [/issues/i, /title/i, /description/i].forEach((text) => {
-      expect(screen.getByText(text)).toBeInTheDocument();
-    });
+    expect(await screen.findAllByRole("textbox")).toHaveLength(2);
+    expect(
+      await screen.findByRole("button", { name: "issue-submit" }),
+    ).toBeInTheDocument();
   });
 
   it("should autoFocus on title", () => {
-    render(<Issues />);
+    render(<IssueForm />);
     expect(screen.getByLabelText(/title/i)).toHaveFocus();
   });
 
   it("should display two errors if nothing is provided in form", async () => {
     const { user, submit } = setup();
     await user.click(submit());
-    expect(screen.getAllByRole("alert").length).toEqual(2);
+    const alerts = await screen.findAllByRole("alert");
+    expect(alerts.length).toEqual(2);
   });
 
   it.each([
