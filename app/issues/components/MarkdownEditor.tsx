@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import "easymde/dist/easymde.min.css";
+import { useMemo } from "react";
 
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   ssr: false,
@@ -14,13 +15,16 @@ type Props = {
   options?: Record<string, any>;
 };
 
-export default function MarkdownEditor({ options }: Props) {
+export default function MarkdownEditor({ value, onChange, options }: Props) {
+  const memoizedOptions = useMemo(
+    () => ({
+      spellChecker: true,
+      ...options,
+    }),
+    [options],
+  );
+
   return (
-    <SimpleMDE
-      options={{
-        spellChecker: true,
-        ...options,
-      }}
-    />
+    <SimpleMDE value={value} onChange={onChange} options={memoizedOptions} />
   );
 }
