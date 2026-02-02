@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma/prisma";
 import { MdEdit } from "react-icons/md";
 
 import Link from "next/link";
+import IssueDeleteButton from "./IssueDeleteButton";
 
 const IssuesTable = async () => {
   const issues = await prisma.issue.findMany();
@@ -45,11 +46,14 @@ const IssuesTable = async () => {
                     }).format(new Date(issue.createdAt.toLocaleString()))}
                   </td>
                   <td>
-                    <Link href={`issues/${issue.id}/edit`}>
-                      <button className="btn-pr-3">
-                        <MdEdit />
-                      </button>
-                    </Link>
+                    <div className="flex space-x-1">
+                      <Link href={`issues/${issue.id}/edit`}>
+                        <button className="btn-pr-3">
+                          <MdEdit />
+                        </button>
+                      </Link>
+                      <IssueDeleteButton id={issue?.id} text={""} />
+                    </div>
                   </td>
                 </tr>
               ))}

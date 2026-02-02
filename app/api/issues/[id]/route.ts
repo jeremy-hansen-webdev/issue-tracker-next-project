@@ -46,3 +46,24 @@ export async function PATCH(request: Request, { params }: Params) {
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
+export async function DELETE(request: Request, { params }: Params) {
+  try {
+    const id = Number((await params).id);
+
+    if (!id || isNaN(id)) {
+      return NextResponse.json({ error: "Invalid Id" }, { status: 400 });
+    }
+    await prisma.issue.delete({
+      where: { id },
+    });
+
+    revalidatePath("/issues");
+    revalidatePath(`/issues/${id}`);
+
+    return NextResponse.json({ message: "Issue deleted" }, { status: 200 });
+  } catch (error) {
+    console.log("DELETE /api/issues/[id] error:", error);
+
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}
