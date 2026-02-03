@@ -7,17 +7,26 @@ import { FaBug } from "react-icons/fa";
 import AuthButtons from "./components/AuthButtons";
 
 const NavBar = () => {
+  return (
+    <nav className="flex justify-between gap-5 p-5 border border-zinc-900 items-center">
+      <NavLinks />
+      <AuthButtons />
+    </nav>
+  );
+};
+
+export default NavBar;
+
+const NavLinks = () => {
   const pathname = usePathname();
   const issues = [
     { name: "Dashboard", href: "/" },
     { name: "Issues", href: "/issues" },
   ];
   return (
-    <nav className="flex justify-between gap-5 p-5 border border-zinc-900 items-center">
+    <>
+      <NavLogo />
       <ul className="flex gap-5">
-        <Link aria-label="Home" href={"/"}>
-          <FaBug size={30} />
-        </Link>
         {issues.map((issue) => (
           <li key={issue.href}>
             <Link
@@ -32,9 +41,20 @@ const NavBar = () => {
           </li>
         ))}
       </ul>
-      <AuthButtons />
-    </nav>
+    </>
   );
 };
 
-export default NavBar;
+export { NavLinks };
+
+const NavLogo = () => {
+  return (
+    <>
+      <Link aria-label="Home" href={"/"}>
+        <FaBug size={30} />
+      </Link>
+    </>
+  );
+};
+
+export { NavLogo };
