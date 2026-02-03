@@ -13,11 +13,11 @@ const NavBar = () => {
     { name: "Issues", href: "/issues" },
   ];
   return (
-    <nav className="flex gap-5 p-5 border border-zinc-900 items-center">
-      <Link aria-label="Home" href={"/"}>
-        <FaBug size={30} />
-      </Link>
+    <nav className="flex justify-between gap-5 p-5 border border-zinc-900 items-center">
       <ul className="flex gap-5">
+        <Link aria-label="Home" href={"/"}>
+          <FaBug size={30} />
+        </Link>
         {issues.map((issue) => (
           <li key={issue.href}>
             <Link
@@ -32,7 +32,7 @@ const NavBar = () => {
           </li>
         ))}
       </ul>
-      <AuthButtons/>
+      <AuthButtons />
     </nav>
   );
 };
