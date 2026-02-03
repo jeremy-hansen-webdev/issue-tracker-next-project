@@ -5,8 +5,11 @@ import { MdEdit } from "react-icons/md";
 
 import Link from "next/link";
 import IssueDeleteButton from "./IssueDeleteButton";
+import { getServerSession } from "next-auth";
+import authOptions from "@/app/api/auth/authOptions";
 
 const IssuesTable = async () => {
+  const session = await getServerSession(authOptions);
   const issues = await prisma.issue.findMany();
   return (
     <div>
@@ -45,16 +48,18 @@ const IssuesTable = async () => {
                       dateStyle: "medium",
                     }).format(new Date(issue.createdAt.toLocaleString()))}
                   </td>
-                  <td>
-                    <div className="flex space-x-1">
-                      <Link href={`issues/${issue.id}/edit`}>
-                        <button className="btn-pr-3">
-                          <MdEdit />
-                        </button>
-                      </Link>
-                      <IssueDeleteButton id={issue?.id} text={""} />
-                    </div>
-                  </td>
+                  {session && (
+                    <td>
+                      <div className="flex space-x-1">
+                        <Link href={`issues/${issue.id}/edit`}>
+                          <button className="btn-pr-3">
+                            <MdEdit />
+                          </button>
+                        </Link>
+                        <IssueDeleteButton id={issue?.id} text={""} />
+                      </div>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>

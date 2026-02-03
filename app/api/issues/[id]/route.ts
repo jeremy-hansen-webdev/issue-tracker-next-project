@@ -1,14 +1,23 @@
 import { prisma } from "@/lib/prisma/prisma";
 import { createIssueSchema } from "@/lib/validation/issues";
+import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
+import authOptions from "../../auth/authOptions";
 
 interface Params {
   params: Promise<{ id: string }>;
 }
 
 export async function PATCH(request: Request, { params }: Params) {
+  const session = await getServerSession(authOptions);
+
+  if (!session)
+    return NextResponse.json(
+      { error: "Unauthorized to visit this route" },
+      { status: 401 },
+    );
   try {
     const id = Number((await params).id);
     if (!id || isNaN(id)) {
@@ -47,6 +56,13 @@ export async function PATCH(request: Request, { params }: Params) {
   }
 }
 export async function DELETE(request: Request, { params }: Params) {
+  const session = await getServerSession(authOptions);
+
+  if (!session)
+    return NextResponse.json(
+      { error: "Unauthorized to visit this route" },
+      { status: 401 },
+    );
   try {
     const id = Number((await params).id);
 

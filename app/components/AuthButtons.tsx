@@ -1,5 +1,5 @@
 "use client";
-
+import Skeleton from "@/lib";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -21,7 +21,12 @@ export default function AuthButtons() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  if (status === "loading") return <div>Loading…</div>;
+  if (status === "loading")
+    return (
+      <div className="flex items-center gap-2">
+        <Skeleton circle width={60} height={60} />
+      </div>
+    );
 
   if (!session) {
     return (

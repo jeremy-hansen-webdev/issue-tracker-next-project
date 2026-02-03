@@ -6,12 +6,15 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import IssueDeleteButton from "../components/IssueDeleteButton";
 import { issueBadge } from "../issuesBadgeType";
+import { getServerSession } from "next-auth";
+import authOptions from "@/app/api/auth/authOptions";
 
 interface Params {
   params: Promise<{ id: string }>;
 }
 
 const IssuesDetailPage = async ({ params }: Params) => {
+  const session = await getServerSession(authOptions);
   const { id } = await params;
   const issue = await prisma.issue.findUnique({
     where: { id: parseInt(id) },
@@ -37,16 +40,18 @@ const IssuesDetailPage = async ({ params }: Params) => {
           </ReactMarkdown>
         </article>
         <div className="flex justify-between items-start">
-          <div className="flex space-x-2">
-            <IssueDeleteButton id={issue?.id} text={"DELETE"} />
-            <Link href={`${issue?.id}/edit`}>
-              <button className="btn-pr-1 space-x-2">
-                {" "}
-                <span>Edit</span>
-                <FiEdit2 />
-              </button>
-            </Link>
-          </div>
+          {session && (
+            <div className="flex space-x-2">
+              <IssueDeleteButton id={issue?.id} text={"DELETE"} />
+              <Link href={`${issue?.id}/edit`}>
+                <button className="btn-pr-1 space-x-2">
+                  {" "}
+                  <span>Edit</span>
+                  <FiEdit2 />
+                </button>
+              </Link>
+            </div>
+          )}
           <p className="mr-5">
             {new Intl.DateTimeFormat("en-US", { dateStyle: "long" }).format(
               new Date(issue.createdAt.toLocaleString()),

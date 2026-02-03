@@ -22,6 +22,7 @@
     "easymde": "^2.20.0",
     "mariadb": "^3.4.5",
     "next": "16.1.4",
+    "next-auth": "^4.24.13",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-hook-form": "^7.71.1",
