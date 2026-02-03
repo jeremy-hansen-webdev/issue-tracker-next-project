@@ -4,6 +4,7 @@ import classNames from "classnames";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaBug } from "react-icons/fa";
+import AuthButtons from "./components/AuthButtons";
 
 const NavBar = () => {
   const pathname = usePathname();
@@ -31,6 +32,7 @@ const NavBar = () => {
           </li>
         ))}
       </ul>
+      <AuthButtons/>
     </nav>
   );
 };
