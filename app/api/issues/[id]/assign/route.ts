@@ -1,0 +1,60 @@
+import authOptions from "@/app/api/auth/authOptions";
+import { prisma } from "@/lib/prisma/prisma";
+import {
+  assignUserIssueSchema
+} from "@/lib/validation/issues";
+import { getServerSession } from "next-auth";
+import { revalidatePath } from "next/cache";
+import { NextResponse } from "next/server";
+import { ZodError } from "zod";
+
+interface Params {
+  params: Promise<{ id: string }>;
+}
+
+export async function PATCH(request: Request, { params }: Params) {
+  const session = await getServerSession(authOptions);
+
+  if (!session)
+    return NextResponse.json(
+      { error: "Unauthorized to visit this route" },
+      { status: 401 },
+    );
+  try {
+    const id = Number((await params).id);
+    if (!id || isNaN(id)) {
+      return NextResponse.json({ error: "Invalid Id" }, { status: 400 });
+    }
+    const body = await request.json();
+    const data = assignUserIssueSchema.parse(body);
+
+    const patch = await prisma.issue.update({
+      where: { id },
+      data: {
+        assignedTo: data.assignedToId
+          ? { connect: { id: data.assignedToId } }
+          : undefined,
+      },
+    });
+
+    revalidatePath("/issues");
+    revalidatePath(`/issues/${id}`);
+
+    return NextResponse.json({ ok: true, patch }, { status: 200 });
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        {
+          error: "Validation failed",
+          issues: error.issues.map((i) => ({
+            path: i.path.join("."),
+            massage: i.message,
+          })),
+        },
+        { status: 400 },
+      );
+    }
+    console.log(error);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}

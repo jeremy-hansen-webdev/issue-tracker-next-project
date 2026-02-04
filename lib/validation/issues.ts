@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 
 export const createIssueSchema = z.object({
   title: z
@@ -11,4 +11,10 @@ export const createIssueSchema = z.object({
     .max(5000, "Description must not exceed 5000 characters"),
 });
 
-export type createIssueInput = z.infer<typeof createIssueSchema>;
+export type patchIssueSchema = z.infer<typeof createIssueSchema>;
+
+export const assignUserIssueSchema = z.object({
+  assignedToId: z.string().nullable().optional(),
+});
+
+export type assignUserIssueSchema = z.infer<typeof assignUserIssueSchema>;

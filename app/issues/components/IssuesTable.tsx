@@ -1,12 +1,12 @@
 import { IssuesTableHeader } from "@/app/issues/components/IssuesTableHeader";
 import { issueBadge } from "@/app/issues/issuesBadgeType";
 import { prisma } from "@/lib/prisma/prisma";
-import { MdEdit } from "react-icons/md";
 
+import authOptions from "@/app/api/auth/authOptions";
+import { getServerSession } from "next-auth";
 import Link from "next/link";
 import IssueDeleteButton from "./IssueDeleteButton";
-import { getServerSession } from "next-auth";
-import authOptions from "@/app/api/auth/authOptions";
+import { IssuesEditButton } from "./IssueEditButton";
 
 const IssuesTable = async () => {
   const session = await getServerSession(authOptions);
@@ -51,11 +51,7 @@ const IssuesTable = async () => {
                   {session && (
                     <td>
                       <div className="flex space-x-1">
-                        <Link href={`issues/${issue.id}/edit`}>
-                          <button className="btn-pr-3">
-                            <MdEdit />
-                          </button>
-                        </Link>
+                        <IssuesEditButton id={issue?.id} text={""} />
                         <IssueDeleteButton id={issue?.id} text={""} />
                       </div>
                     </td>

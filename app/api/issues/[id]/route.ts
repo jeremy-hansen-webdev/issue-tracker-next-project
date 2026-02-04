@@ -11,13 +11,13 @@ interface Params {
 }
 
 export async function PATCH(request: Request, { params }: Params) {
-  const session = await getServerSession(authOptions);
+  // const session = await getServerSession(authOptions);
 
-  if (!session)
-    return NextResponse.json(
-      { error: "Unauthorized to visit this route" },
-      { status: 401 },
-    );
+  // if (!session)
+  //   return NextResponse.json(
+  //     { error: "Unauthorized to visit this route" },
+  //     { status: 401 },
+  //   );
   try {
     const id = Number((await params).id);
     if (!id || isNaN(id)) {
@@ -55,6 +55,9 @@ export async function PATCH(request: Request, { params }: Params) {
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
+
+
+
 export async function DELETE(request: Request, { params }: Params) {
   const session = await getServerSession(authOptions);
 
